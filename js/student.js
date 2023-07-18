@@ -1,5 +1,3 @@
-console.log(localStorage.getItem('students'));
-
 //một function để kiểm tra định dạng email
 function emailIsValid(email){
     return /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(email)
@@ -92,8 +90,6 @@ function save() {
 
 function renderListStudent(){
     let students = localStorage.getItem('students') ? JSON.parse(localStorage.getItem('students')) : [];
-    
-    console.log(students.length)
     if (students.length === 0) {
         document.getElementById('list-student').style.display = 'none';
         return false;
@@ -112,8 +108,9 @@ function renderListStudent(){
     </tr>`;
 
     students.forEach((student,index) => {
-        index++;
+        let studentId = index;
         let genderLabel = parseInt(student.gender) === 1 ? 'Nam' : 'Nữ';
+        index++;
         tableContent += `<tr>
             <td>${index}</td>
             <td>${student.fullname}</td>
@@ -122,11 +119,18 @@ function renderListStudent(){
             <td>${genderLabel}</td>
             <td>${student.address}</td>
             <td>
-                <a href='#'>Edit</a> | <a href='#'>Delete</a>
+                <a href='#'>Edit</a> | <a href='#' onclick='deleteStudent(${studentId})'>Delete</a>
             </td>
         </tr>`;
     });
     
     document.getElementById('grid-students').innerHTML = tableContent;
 
+}
+
+function deleteStudent(id){
+    let students = localStorage.getItem('students') ? JSON.parse(localStorage.getItem('students')) : [];
+    students.splice(id,1);
+    localStorage.setItem('students', JSON.stringify(students));
+    renderListStudent();
 }
